@@ -1,0 +1,88 @@
+# install influxdb
+sudo docker run -d -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 --name influxsrv tutum/influxdb
+sudo docker run -dit -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 --name influxsrv centos:6.6 /bin/bash
+docker run -d -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 --name influxsrv systemli/influxdb
+
+RedHat & CentOS
+
+RedHat and CentOS users can install by downloading and installing the rpm like this:
+
+# for 64-bit systems
+wget https://s3.amazonaws.com/influxdb/influxdb-0.8.8-1.x86_64.rpm
+sudo rpm -ivh influxdb-0.8.8-1.x86_64.rpm
+
+
+
+docker run -it -p 18080:8080 -d --name shipyard \
+  --link shipyard-rethinkdb:rethinkdb shipyard/shipyard
+
+docker run -p 8080:8080 -v /sys/fs/cgroup:/cgroup -v /var/run/docker.sock:/var/run/docker.sock prom/container-exporter
+docker run -p 28080:8080 -v /sys/fs/cgroup:/cgroup -v /var/run/docker.sock:/var/run/docker.sock prom/container-exporter
+docker run -d -p 9090:9090 --link ce:ce --name prometheus prom/prometheus
+docker run -d -p 9090:9090 --link ce:ce --name prometheus prometheus:mine
+
+
+# for 32-bit systems
+wget https://s3.amazonaws.com/influxdb/influxdb-0.8.8-1.i686.rpm
+sudo rpm -ivh influxdb-0.8.8-1.i686.rpm
+
+Then start the daemon by running:
+
+sudo /etc/init.d/influxdb start
+
+
+#install cadvisor
+sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=8080:8080 --detach=true --link influxsrv:influxsrv --name=cadvisor google/cadvisor:latest -storage_driver_db="cadvisor" -storage_driver_host="influxsrv:8086" -storage_driver="influxdb" -storage_driver_user="root" -storage_driver_password="root"
+sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=8080:8080 --detach=true --name=testcad google/cadvisor:latest -storage_driver_db="cadvisor" -storage_driver_host="121.43.104.24:8086" -storage_driver="influxdb" -storage_driver_user="root" -storage_driver_password="root"
+#install grafana
+sudo docker run -d -p 3001:3000 -e INFLUXDB_HOST=influxsrv -e INFLUXDB_PORT=8086 -e INFLUXDB_NAME=cadvisor -e INFLUXDB_USER=root -e INFLUXDB_PASS=root --link influxsrv:influxsrv --name grafana grafana/grafana
+
+curl -XPOST 'http://localhost:8086/write?db=cadvisor' \
+-d 'cpu,host=server01,region=uswest value=1.0 1434055562000000000'
+
+#elasticsearch 1.6
+
+http://localhost:9200/
+curl -XPOST 'localhost:9200/bank/customer/_bulk?pretty' --data-binary @accounts.json
+curl 'localhost:9200/_cat/indices?v'
+
+
+#elasticsearch-1.5.1 search and index
+9200 9300
+bin/elasticsearch -Xmx50m -Xms50m
+
+#kibana-4.1.1   show
+bin/kibana
+
+#logstash
+wget https://download.elastic.co/logstash/logstash/logstash-1.5.2.tar.gz
+bin/logstash -e 'input { stdin { } } output { elasticsearch { host => 128.199.110.161 } }'
+#install logspout
+docker pull gliderlabs/logspout:latest
+docker run -d --name="logspout" --volume=/var/run/docker.sock:/tmp/docker.sock gliderlabs/logspout syslog://10.117.110.149:5000
+docker run -d --name="logspout" --volume=/var/run/docker.sock:/tmp/docker.sock gliderlabs/logspout syslog://128.199.103.110:5000
+
+docker run -d --name="logspout" --volume=/var/run/docker.sock:/tmp/docker.sock gliderlabs/logspout syslog://192.168.128.116:5000
+docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=18080:8080 --detach=true --name=cadvisor google/cadvisor:latest -storage_driver_db="ytxapp117" -storage_driver_host="192.168.210.82:8086" -storage_driver="influxdb" -storage_driver_user="root" -storage_driver_password="root"
+docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=18080:8080 --detach=true --name=cadvisor google/cadvisor:latest -storage_driver_db="ytxapp117" -storage_driver_host="192.168.210.82:8086" -storage_driver="influxdb" -storage_driver_user="root" -storage_driver_password="root"
+
+#install docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.3.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+
+#install elk
+$ git clone https://github.com/nathanleclaire/elk
+$ cd elk
+$ docker-compose -f docker-compose-quickstart.yml up
+
+#keepalived
+wget http://www.keepalived.org/software/keepalived-1.2.19.tar.gz
+yum install -y openssl* libnl-dev* ipvsadm popt*
+
+sudo docker run --name smokeping -p 8080:80 -e SPUSER=root -d \
+            dperson/smokeping \
+			-T Asia/Shanghai
+			
+sudo docker exec smokeping smokeping.sh -t "home;dns-google;8.8.8.8"
+sudo docker exec smokeping smokeping.sh -t "home;dns-shanghai;202.96.209.133"
